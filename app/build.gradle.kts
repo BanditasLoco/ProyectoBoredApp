@@ -62,6 +62,8 @@ dependencies {
 
     implementation("androidx.compose.material:material-icons-extended")
 
+    implementation("io.coil-kt:coil-compose:2.6.0")
+
     // Configuración de Room
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
