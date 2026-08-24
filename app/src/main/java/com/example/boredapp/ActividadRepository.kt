@@ -15,4 +15,8 @@ class ActividadRepository(
     suspend fun insertarActividadLocal(actividad: Actividad) {
         actividadDao.insertarActividad(actividad)
     }
+
+    suspend fun obtenerActividadLocalPorId(id: Int): Actividad? {
+        return actividadDao.obtenerActividadPorId(id)
+    }
 }

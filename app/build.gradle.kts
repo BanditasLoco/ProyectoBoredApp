@@ -58,10 +58,14 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
 
+    implementation("androidx.navigation:navigation-compose:2.7.7")
+
     implementation("androidx.compose.material:material-icons-extended")
 
     // Configuración de Room
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
+
+    implementation(libs.androidx.datastore.preferences)
 }

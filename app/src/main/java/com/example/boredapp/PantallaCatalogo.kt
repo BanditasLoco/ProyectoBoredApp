@@ -1,37 +1,54 @@
 package com.example.boredapp
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PantallaCatalogo(viewModel: ActividadViewModel) {
+fun PantallaCatalogo(navController: NavController, viewModel: ActividadViewModel) {
 
     // Observamos la lista de actividades desde el ViewModel
     val listaActividades by viewModel.actividades.collectAsState()
+
+    // Obtenemos el contexto actual para poder usarlo en AjustesUsuario
+    val context = LocalContext.current
+    // Obtenemos el nombre de usuario desde AjustesUsuario
+    val ajustesUsuario = remember { AjustesUsuario(context) }
+    // Observamos el flujo de nombre de usuario y lo convertimos en un estado para que Compose lo observe
+    val nombreUsuario by ajustesUsuario.nombreUsuarioFlow.collectAsState(initial = "Cargando...")
 
     // SCAFFOLD nos da una estructura profesional con Barra Superior
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("BoredApp", fontWeight = FontWeight.Bold) },
+                title = { Text("Hola $nombreUsuario", fontWeight = FontWeight.Bold) },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                )
+                ),
+                actions = {
+                    IconButton(onClick = { navController.navigate("ajustes") }) {
+                        Icon(Icons.Default.Settings, contentDescription = "Ajustes")
+                    }
+                }
             )
         },
 
@@ -78,7 +95,7 @@ fun PantallaCatalogo(viewModel: ActividadViewModel) {
             ) {
                 item { Spacer(modifier = Modifier.height(8.dp)) } // Espacio inicial
                 items(listaActividades) { actividad ->
-                    ItemActividad(actividad = actividad)
+                    ItemActividad(actividad = actividad, navController = navController)
                 }
             }
         }
@@ -86,9 +103,11 @@ fun PantallaCatalogo(viewModel: ActividadViewModel) {
 }
 
 @Composable
-fun ItemActividad(actividad: Actividad) {
+fun ItemActividad(actividad: Actividad, navController: NavController) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { navController.navigate("detalles/${actividad.id}") },
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
         shape = RoundedCornerShape(12.dp)
     ) {
