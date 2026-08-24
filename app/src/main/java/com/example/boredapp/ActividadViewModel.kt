@@ -3,6 +3,7 @@ package com.example.boredapp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
@@ -25,6 +26,17 @@ class ActividadViewModel(private val repository: ActividadRepository) : ViewMode
 
     suspend fun obtenerActividadPorId(id: Int): Actividad? {
         return repository.obtenerActividadLocalPorId(id)
+    }
+
+    // Estado para almacenar la actividad aleatoria descargada de la API
+    private val _actividadAleatoria = MutableStateFlow<ActividadRed?>(null)
+    val actividadAleatoria: StateFlow<ActividadRed?> = _actividadAleatoria
+
+    fun descargarActividadAleatoria(){
+        viewModelScope.launch {
+            _actividadAleatoria.value = null // Mostramos la ruedita de carga mientras baja la nueva actividad
+            _actividadAleatoria.value = repository.obtenerActividadAleatoriaDelMundo()
+        }
     }
 }
 

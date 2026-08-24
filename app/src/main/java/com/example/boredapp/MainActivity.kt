@@ -47,7 +47,9 @@ fun BoredAppApp() {
     val database = ActividadDatabase.getDatabase(context)
     val dao = database.actividadDao()
 
-    val repositorio = remember { ActividadRepository(dao) }
+    val api = RetrofitClient.api
+
+    val repositorio = remember { ActividadRepository(dao, api) }
 
     //Creamos el viewModel usando nuestro factory personalizado para pasarle el DAO
     val actividadViewModel: ActividadViewModel = viewModel(factory = ActividadViewModelFactory(repositorio))
@@ -60,7 +62,17 @@ fun BoredAppApp() {
             PantallaCatalogo(navController = navController, viewModel = actividadViewModel)
         }
 
-        // --- RUTA 2: Los Detalles (Espera un parámetro llamado {id}) ---
+        //RUTA 2: ACTIVIDAD ALEATORIA
+        composable("aleatoria") {
+            PantallaAleatoria(navController = navController, viewModel = actividadViewModel)
+        }
+
+        // --- RUTA 3: Ajustes de Usuario ---
+        composable("ajustes") {
+            PantallaAjustes(navController = navController)
+        }
+
+        // --- RUTA 4: Los Detalles (Espera un parámetro llamado {id}) ---
         composable("detalles/{id}") { backStackEntry ->
             val idString = backStackEntry.arguments?.getString("id")
             val idInt = idString?.toIntOrNull() ?: 0
