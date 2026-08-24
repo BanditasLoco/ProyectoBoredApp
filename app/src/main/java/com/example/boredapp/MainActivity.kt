@@ -60,6 +60,12 @@ fun BoredAppApp() {
             PantallaCatalogo(navController = navController, viewModel = actividadViewModel)
         }
 
+        // --- RUTA 2: Ajustes de Usuario ---
+        composable("ajustes") {
+            PantallaAjustes(navController = navController)
+        }
+
+        // --- RUTA 3: Los Detalles (Espera un parámetro llamado {id}) ---
         // --- RUTA 2: Los Detalles (Espera un parámetro llamado {id}) ---
         composable("detalles/{id}") { backStackEntry ->
             val idString = backStackEntry.arguments?.getString("id")
