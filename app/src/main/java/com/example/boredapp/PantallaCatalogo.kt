@@ -45,6 +45,10 @@ fun PantallaCatalogo(navController: NavController, viewModel: ActividadViewModel
                     titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
                 ),
                 actions = {
+                    IconButton(onClick = { navController.navigate("aleatoria") }) {
+                        Icon(Icons.Default.Casino, contentDescription = "Actividad Aleatoria")
+                    }
+
                     IconButton(onClick = { navController.navigate("ajustes") }) {
                         Icon(Icons.Default.Settings, contentDescription = "Ajustes")
                     }
