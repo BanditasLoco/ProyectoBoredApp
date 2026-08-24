@@ -15,6 +15,9 @@ interface ActividadDao {
     @Query("SELECT * FROM actividades")
     fun obtenerActividades(): Flow<List<Actividad>>
 
+    @Query("SELECT * FROM actividades WHERE id = :idBuscado")
+    suspend fun obtenerActividadPorId(idBuscado: Int): Actividad?
+
     @Query("DELETE FROM actividades")
     suspend fun borrarTodas()
 }
