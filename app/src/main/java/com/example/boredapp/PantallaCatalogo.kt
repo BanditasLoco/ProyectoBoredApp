@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Casino
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -56,22 +57,10 @@ fun PantallaCatalogo(navController: NavController, viewModel: ActividadViewModel
             )
         },
 
-        //Agregar un boton para insertar datos
+        //Agregar un boton para ir a buscar una actividad en la API
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {
-                    //Insertar una actividad de ejemplo
-                    val nuevaActividad = Actividad(
-                        actividad = "Aprender a hacer origami",
-                        tipo = "recreational",
-                        participantes = 1,
-                        precio = 0.0,
-                        duracion = "minutes",
-                        accesibilidad = "Few to no challenges",
-                        aptaParaNinos = true
-                    )
-                    viewModel.insertarActividad(nuevaActividad)
-                }
+                onClick = { navController.navigate("buscar") }
             )
             {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Agregar Actividad")
@@ -84,7 +73,7 @@ fun PantallaCatalogo(navController: NavController, viewModel: ActividadViewModel
         if (listaActividades.isEmpty()) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text(
-                    text = "No hay actividades guardadas. Agrega una usando el botón +",
+                    text = "No hay actividades guardadas./n Agrega una usando el botón +",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )

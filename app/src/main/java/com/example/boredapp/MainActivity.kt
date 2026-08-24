@@ -62,20 +62,22 @@ fun BoredAppApp() {
             PantallaCatalogo(navController = navController, viewModel = actividadViewModel)
         }
 
+        // RUTA 1b: Buscar actividades por categoría y participantes, y guardar una
+        composable("buscar") {
+            PantallaBuscarActividad(navController = navController, viewModel = actividadViewModel)
+        }
+
         //RUTA 2: ACTIVIDAD ALEATORIA
         composable("aleatoria") {
             PantallaAleatoria(navController = navController, viewModel = actividadViewModel)
         }
 
         // --- RUTA 3: Ajustes de Usuario ---
-        // --- RUTA 2: Ajustes de Usuario ---
         composable("ajustes") {
             PantallaAjustes(navController = navController)
         }
 
         // --- RUTA 4: Los Detalles (Espera un parámetro llamado {id}) ---
-        // --- RUTA 3: Los Detalles (Espera un parámetro llamado {id}) ---
-        // --- RUTA 2: Los Detalles (Espera un parámetro llamado {id}) ---
         composable("detalles/{id}") { backStackEntry ->
             val idString = backStackEntry.arguments?.getString("id")
             val idInt = idString?.toIntOrNull() ?: 0

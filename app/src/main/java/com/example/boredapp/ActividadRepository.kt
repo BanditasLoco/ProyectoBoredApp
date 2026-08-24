@@ -31,4 +31,13 @@ class ActividadRepository(
             null // Si hay error de internet, devolvemos null para que no explote la app
         }
     }
+
+    suspend fun filtrarActividadesDelMundo(tipo: String, participantes: Int): List<ActividadRed> {
+        return try {
+            boredApi.filtrarActividades(tipo, participantes)
+        } catch (e: Exception) {
+            android.util.Log.e("BoredApp", "Error en Repositorio: ${e.message}")
+            emptyList() // Si hay error de internet, devolvemos una lista vacía para que no explote la app
+        }
+    }
 }

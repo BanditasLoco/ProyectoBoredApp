@@ -38,6 +38,30 @@ class ActividadViewModel(private val repository: ActividadRepository) : ViewMode
             _actividadAleatoria.value = repository.obtenerActividadAleatoriaDelMundo()
         }
     }
+
+    // Estado para almacenar los resultados de la búsqueda por categoría y participantes
+    private val _resultadosBusqueda = MutableStateFlow<List<ActividadRed>>(emptyList())
+    val resultadosBusqueda: StateFlow<List<ActividadRed>> = _resultadosBusqueda
+
+    fun buscarActividades(tipo: String, participantes: Int){
+        viewModelScope.launch {
+            _resultadosBusqueda.value = repository.filtrarActividadesDelMundo(tipo, participantes)
+        }
+    }
+
+    // Convierte un resultado de la API en una Actividad local y la guarda en el catálogo
+    fun guardarActividadDesdeApi(actividadRed: ActividadRed){
+        val nuevaActividad = Actividad(
+            actividad = actividadRed.actividad,
+            tipo = actividadRed.tipo,
+            participantes = actividadRed.participantes,
+            precio = actividadRed.precio,
+            duracion = actividadRed.duracion,
+            accesibilidad = actividadRed.accesibilidad,
+            aptaParaNinos = actividadRed.aptaParaNinos
+        )
+        insertarActividad(nuevaActividad)
+    }
 }
 
 class ActividadViewModelFactory(private val repository: ActividadRepository) : ViewModelProvider.Factory {
