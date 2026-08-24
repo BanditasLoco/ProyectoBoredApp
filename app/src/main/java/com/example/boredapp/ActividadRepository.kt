@@ -21,6 +21,10 @@ class ActividadRepository(
         return actividadDao.obtenerActividadPorId(id)
     }
 
+    suspend fun eliminarActividadLocal(id: Int) {
+        actividadDao.eliminarActividadPorId(id)
+    }
+
     // --- 2. OPERACIONES DE RED (RETROFIT) ---
 
     suspend fun obtenerActividadAleatoriaDelMundo(): ActividadRed? {

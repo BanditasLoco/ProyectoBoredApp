@@ -8,12 +8,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Casino
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -73,7 +76,7 @@ fun PantallaCatalogo(navController: NavController, viewModel: ActividadViewModel
         if (listaActividades.isEmpty()) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text(
-                    text = "No hay actividades guardadas./n Agrega una usando el botón +",
+                    text = "No hay actividades guardadas. Agrega una usando el botón +",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -88,7 +91,11 @@ fun PantallaCatalogo(navController: NavController, viewModel: ActividadViewModel
             ) {
                 item { Spacer(modifier = Modifier.height(8.dp)) } // Espacio inicial
                 items(listaActividades) { actividad ->
-                    ItemActividad(actividad = actividad, navController = navController)
+                    ItemActividad(
+                        actividad = actividad,
+                        navController = navController,
+                        onEliminar = { viewModel.eliminarActividad(actividad.id) }
+                    )
                 }
             }
         }
@@ -96,7 +103,11 @@ fun PantallaCatalogo(navController: NavController, viewModel: ActividadViewModel
 }
 
 @Composable
-fun ItemActividad(actividad: Actividad, navController: NavController) {
+fun ItemActividad(actividad: Actividad, navController: NavController, onEliminar: () -> Unit) {
+
+    // Estado para controlar si mostramos el diálogo de confirmación de borrado
+    var mostrarDialogoEliminar by remember { mutableStateOf(false) }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -105,7 +116,26 @@ fun ItemActividad(actividad: Actividad, navController: NavController) {
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
-            Text(text = actividad.actividad, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = actividad.actividad,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.weight(1f)
+                )
+
+                IconButton(onClick = { mostrarDialogoEliminar = true }) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = "Eliminar actividad",
+                        tint = MaterialTheme.colorScheme.error
+                    )
+                }
+            }
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = "${actividad.tipo} • ${actividad.participantes} participante(s) • ${actividad.duracion}",
@@ -141,5 +171,27 @@ fun ItemActividad(actividad: Actividad, navController: NavController) {
                 }
             }
         }
+    }
+
+    // Diálogo de confirmación para no borrar una actividad por accidente
+    if (mostrarDialogoEliminar) {
+        AlertDialog(
+            onDismissRequest = { mostrarDialogoEliminar = false },
+            title = { Text("Eliminar actividad") },
+            text = { Text("¿Seguro que quieres eliminar \"${actividad.actividad}\" de tu catálogo?") },
+            confirmButton = {
+                TextButton(onClick = {
+                    onEliminar()
+                    mostrarDialogoEliminar = false
+                }) {
+                    Text("Eliminar")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { mostrarDialogoEliminar = false }) {
+                    Text("Cancelar")
+                }
+            }
+        )
     }
 }
