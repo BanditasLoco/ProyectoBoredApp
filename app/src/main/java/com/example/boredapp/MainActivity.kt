@@ -12,6 +12,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.boredapp.ui.theme.BoredAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -34,6 +37,9 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun BoredAppApp() {
 
+    // 1. Creamos el motor de navegación
+    val navController = rememberNavController()
+
     //Obtener el contexto actual de la aplicación
     val context = LocalContext.current
 
@@ -46,5 +52,24 @@ fun BoredAppApp() {
     //Creamos el viewModel usando nuestro factory personalizado para pasarle el DAO
     val actividadViewModel: ActividadViewModel = viewModel(factory = ActividadViewModelFactory(repositorio))
 
-    PantallaCatalogo(viewModel = actividadViewModel)
+    // 2. Definimos el mapa y decimos que inicie en "catalogo"
+    NavHost(navController = navController, startDestination = "catalogo") {
+
+        // --- RUTA 1: El Catálogo ---
+        composable("catalogo") {
+            PantallaCatalogo(navController = navController, viewModel = actividadViewModel)
+        }
+
+        // --- RUTA 2: Los Detalles (Espera un parámetro llamado {id}) ---
+        composable("detalles/{id}") { backStackEntry ->
+            val idString = backStackEntry.arguments?.getString("id")
+            val idInt = idString?.toIntOrNull() ?: 0
+
+            PantallaDetalles(
+                navController = navController,
+                viewModel = actividadViewModel,
+                actividadId = idInt
+            )
+        }
+    }
 }

@@ -22,6 +22,10 @@ class ActividadViewModel(private val repository: ActividadRepository) : ViewMode
             repository.insertarActividadLocal(actividad)
         }
     }
+
+    suspend fun obtenerActividadPorId(id: Int): Actividad? {
+        return repository.obtenerActividadLocalPorId(id)
+    }
 }
 
 class ActividadViewModelFactory(private val repository: ActividadRepository) : ViewModelProvider.Factory {
