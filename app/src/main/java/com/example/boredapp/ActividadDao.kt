@@ -18,6 +18,9 @@ interface ActividadDao {
     @Query("SELECT * FROM actividades WHERE id = :idBuscado")
     suspend fun obtenerActividadPorId(idBuscado: Int): Actividad?
 
+    @Query("DELETE FROM actividades WHERE id = :idBuscado")
+    suspend fun eliminarActividadPorId(idBuscado: Int)
+
     @Query("DELETE FROM actividades")
     suspend fun borrarTodas()
 }

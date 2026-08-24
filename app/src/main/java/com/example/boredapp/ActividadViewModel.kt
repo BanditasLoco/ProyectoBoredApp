@@ -28,6 +28,12 @@ class ActividadViewModel(private val repository: ActividadRepository) : ViewMode
         return repository.obtenerActividadLocalPorId(id)
     }
 
+    fun eliminarActividad(id: Int){
+        viewModelScope.launch {
+            repository.eliminarActividadLocal(id)
+        }
+    }
+
     // Estado para almacenar la actividad aleatoria descargada de la API
     private val _actividadAleatoria = MutableStateFlow<ActividadRed?>(null)
     val actividadAleatoria: StateFlow<ActividadRed?> = _actividadAleatoria
