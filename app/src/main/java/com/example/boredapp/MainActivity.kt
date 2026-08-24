@@ -66,6 +66,7 @@ fun BoredAppApp() {
         }
 
         // --- RUTA 3: Los Detalles (Espera un parámetro llamado {id}) ---
+        // --- RUTA 2: Los Detalles (Espera un parámetro llamado {id}) ---
         composable("detalles/{id}") { backStackEntry ->
             val idString = backStackEntry.arguments?.getString("id")
             val idInt = idString?.toIntOrNull() ?: 0
